@@ -18,7 +18,6 @@ banner=f"""{RED}
  |____/ \__,_|\___|_|\_\___|_| |_|_|\_\_|\__,_|_.__/ {RESET}\n\n\t"""
 
 print(banner)
-time.sleep(2)
 def C(sig, Frame):
     print("\n\t[^C]Saliendo...")
     sys.exit(1)
@@ -42,7 +41,11 @@ def main(ip):
     except:
         print(f"\n\t{RED}[-] Error En El Parametro 2{RESET}")
 hilo=threading.Thread(target=main)
+hilo2=threading.Thread(target=scan_port)
 hilo.start
+hilo2.start
+hilo.join
+hilo2.join
 if __name__ == '__main__':
     if len(sys.argv) != 3:
         print("Usage: python3 %s <Ip> <Range>" % sys.argv[0])
