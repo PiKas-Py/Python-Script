@@ -41,6 +41,8 @@ def main(ip):
         print(f"\n\t{GREEN}[√] No Hay Mas Puertos{RESET}")
     except:
         print(f"\n\t{RED}[-] Error En El Parametro 2{RESET}")
+hilo=threading.Thread(target=main)
+hilo.start
 if __name__ == '__main__':
     if len(sys.argv) != 3:
         print("Usage: python3 %s <Ip> <Range>" % sys.argv[0])
