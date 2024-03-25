@@ -46,5 +46,5 @@ if __name__ == '__main__':
         print("Usage: python3 %s <Ip> <Range>" % sys.argv[0])
         sys.exit(1)
     ip = sys.argv[1]
-    rango = str(sys.argv[2])
+    rango = int(sys.argv[2])
     main(ip)
