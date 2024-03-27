@@ -19,7 +19,7 @@ Uso
 
 Ejemplo
 
-- python get_ports.py ip Rango Theaders
+- python get_ports.py <ip> <Rango> <Theaders>
 - Este comando escaneará los puertos TCP en el host <ip> y mostrará los puertos abiertos.
 - El Parametro <Ip> Seria El Objetivo A Escanear  <Rango> seria asignarle Un Rango de puertos desde el 1-65535 <Theader>, Puede Variar En este caso El Usuario Elije La velocidad En La que quiere escanear Cada Puertos
 
