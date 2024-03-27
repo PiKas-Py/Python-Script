@@ -1,7 +1,8 @@
 import socket,time
 import sys
-import threading
 import signal
+import subprocess
+import concurrent.futures
 
 
 RED='\033[0;31m'
@@ -15,11 +16,15 @@ banner=f"""{RED}
  | __ )  __ _  ___| | _____ _ __ | | _(_) __ _| |__  
  |  _ \ / _` |/ __| |/ / _ \ '_ \| |/ / |/ _` | '_ \ 
  | |_) | (_| | (__|   <  __/ | | |   <| | (_| | |_) |
- |____/ \__,_|\___|_|\_\___|_| |_|_|\_\_|\__,_|_.__/ {RESET}\n\n\t"""
+ |____/ \__,_|\___|_|\_\___|_| |_|_|\_\_|\__,_|_.__/ 
+               
+               Scaner De Puertos TCP
+ {RESET}\n\n\t"""
 
 print(banner)
+
 def C(sig, Frame):
-    print("\n\t[^C]Saliendo...")
+    print(f"\n\t{RED}[^C]Saliendo...{RESET}")
     sys.exit(1)
 signal.signal(signal.SIGINT, C)
 
@@ -28,28 +33,39 @@ def scan_port(ip, port):
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         s.settimeout(1)
         s.connect((ip, port))
-        print(f"[√]{BLUE} Port {port} is open{RESET}")
+        print(f"[💻]{BLUE} Port {port} is open{RESET}")
         s.close()
     except socket.error:
         pass
-
 def main(ip):
     try:
+        print(f"\n\t{GREEN}[√] Buscando Puertos{RESET}\n")
+        with concurrent.futures.ThreadPoolExecutor(max_workers=theader) as executor:
+            futures = [executor.submit(scan_port, ip, p) for p in range(1, rango + 1)]
+
         for p in range(rango):
-            scan_port(ip, p)
+            try:   
+                puertos_abiertos = set()
+                for future in concurrent.futures.as_completed(futures):
+                    puerto = future.result()
+                    if puerto is not None:
+                        puertos_abiertos.add(puerto)
+                        for puerto in puertos_abiertos:
+                            print(f"[💻] Port {puerto} is open")
+            except:
+                pass
         print(f"\n\t{GREEN}[√] No Hay Mas Puertos{RESET}")
-    except:
-        print(f"\n\t{RED}[-] Error En El Parametro 2{RESET}")
-hilo=threading.Thread(target=main)
-hilo2=threading.Thread(target=scan_port)
-hilo.start
-hilo2.start
-hilo.join
-hilo2.join
+    except Exception as e:
+        print("Error %s" % e)
+
+
+
+
 if __name__ == '__main__':
-    if len(sys.argv) != 3:
-        print("Usage: python3 %s <Ip> <Range>" % sys.argv[0])
+    if len(sys.argv) != 4:
+        print("Usage: python3 %s <Ip> <Range> <Theaders>" % sys.argv[0])
         sys.exit(1)
     ip = sys.argv[1]
     rango = int(sys.argv[2])
+    theader = int(sys.argv[3])
     main(ip)
